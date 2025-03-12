@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAD Viewer</title>
+</head>
+<body>
+    <h2>Upload a 3D Model</h2>
+    <input type="file" id="fileInput" accept=".stl">
+    <button onclick="uploadFile()">Upload</button>
+    <p id="status"></p>
+
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length === 0) {
+                document.getElementById("status").innerText = "No file selected!";
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                const response = await fetch("http://localhost:5000/upload", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                document.getElementById("status").innerText = result.message;
+            } catch (error) {
+                document.getElementById("status").innerText = "Upload failed!";
+            }
+        }
+    </script>
+</body>
+</html>
